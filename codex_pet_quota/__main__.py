@@ -43,7 +43,8 @@ def main() -> int:
         return 0
     from .instance_lock import SingleInstance
 
-    if args.supervisor:
+    frozen_default = getattr(sys, "frozen", False) and not args.background
+    if args.supervisor or frozen_default:
         from .supervisor import run_supervisor
 
         with SingleInstance("Local\\CodexPetQuotaSupervisor") as instance:

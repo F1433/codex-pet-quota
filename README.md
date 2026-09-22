@@ -34,6 +34,16 @@ python -m tkinter
 
 ## 下载与首次安装
 
+### 独立 EXE 版
+
+发布目录中的 `CodexPetQuota.exe` 不依赖 Python 或源码目录。把完整目录放到固定位置后运行：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install-autostart.ps1
+```
+
+之后可使用同目录的 `start.ps1`、`stop.ps1` 和 `uninstall-autostart.ps1` 管理程序。
+
 ### 方法一：下载 ZIP
 
 1. 点击 GitHub 页面右上方 **Code → Download ZIP**。

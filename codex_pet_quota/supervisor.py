@@ -45,12 +45,20 @@ def _background_running() -> bool:
         return not probe.acquired
 
 
+def background_launch(executable: Optional[str] = None, frozen: Optional[bool] = None):
+    executable = executable or sys.executable
+    is_frozen = getattr(sys, "frozen", False) if frozen is None else frozen
+    if is_frozen:
+        return [executable, "--background"], Path(executable).resolve().parent
+    return [executable, "-m", "codex_pet_quota", "--background"], Path(__file__).resolve().parent.parent
+
+
 def _spawn_background() -> subprocess.Popen:
-    project_root = Path(__file__).resolve().parent.parent
+    command, working_directory = background_launch()
     creation_flags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
     return subprocess.Popen(
-        [sys.executable, "-m", "codex_pet_quota", "--background"],
-        cwd=str(project_root),
+        command,
+        cwd=str(working_directory),
         stdin=subprocess.DEVNULL,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
