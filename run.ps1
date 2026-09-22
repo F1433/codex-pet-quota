@@ -22,5 +22,5 @@ if ($Once -or $DiagnoseWindows) {
 
 $pythonw = Join-Path (Split-Path -Parent $python.Source) 'pythonw.exe'
 if (-not (Test-Path -LiteralPath $pythonw)) { throw "pythonw.exe not found: $pythonw" }
-Start-Process -FilePath $pythonw -ArgumentList @('-m', 'codex_pet_quota', '--background') -WorkingDirectory $projectRoot -WindowStyle Hidden
-Write-Output 'Codex pet quota background watcher started.'
+Start-Process -FilePath $pythonw -ArgumentList @('-m', 'codex_pet_quota', '--supervisor') -WorkingDirectory $projectRoot -WindowStyle Hidden
+Write-Output 'Codex-bound pet quota supervisor started.'

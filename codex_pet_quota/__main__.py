@@ -34,14 +34,25 @@ def main() -> int:
     parser.add_argument("--once", action="store_true", help="只读一次周额度并输出脱敏 JSON")
     parser.add_argument("--diagnose-windows", action="store_true", help="列出候选 Codex 窗口，不读取额度")
     parser.add_argument("--background", action="store_true", help="静默后台等待宠物交互")
+    parser.add_argument("--supervisor", action="store_true", help="随 Codex 启停并自动恢复后台监听")
     args = parser.parse_args()
     if args.once:
         return _once()
     if args.diagnose_windows:
         print(json.dumps(diagnostics_as_dicts(), ensure_ascii=False, indent=2))
         return 0
-    from .ui import QuotaWindow
     from .instance_lock import SingleInstance
+
+    if args.supervisor:
+        from .supervisor import run_supervisor
+
+        with SingleInstance("Local\\CodexPetQuotaSupervisor") as instance:
+            if not instance.acquired:
+                return 0
+            run_supervisor()
+        return 0
+
+    from .ui import QuotaWindow
 
     with SingleInstance() as instance:
         if not instance.acquired:

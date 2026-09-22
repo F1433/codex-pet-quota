@@ -9,9 +9,19 @@ $shortcutPath = Join-Path $startup 'CodexPetQuota.lnk'
 $shell = New-Object -ComObject WScript.Shell
 $shortcut = $shell.CreateShortcut($shortcutPath)
 $shortcut.TargetPath = $pythonw
-$shortcut.Arguments = '-m codex_pet_quota --background'
+$shortcut.Arguments = '-m codex_pet_quota --supervisor'
 $shortcut.WorkingDirectory = $projectRoot
 $shortcut.WindowStyle = 7
-$shortcut.Description = 'Wait for Codex pet interaction, then read weekly quota.'
+$shortcut.Description = 'Start and recover the quota watcher with the Codex desktop pet.'
 $shortcut.Save()
+
+$running = @(
+    Get-CimInstance Win32_Process -Filter "Name='pythonw.exe'" |
+        Where-Object { $_.CommandLine -like '*codex_pet_quota*' }
+)
+foreach ($process in $running) {
+    Stop-Process -Id $process.ProcessId -Force
+}
+Start-Process -FilePath $pythonw -ArgumentList @('-m', 'codex_pet_quota', '--supervisor') -WorkingDirectory $projectRoot -WindowStyle Hidden
 Write-Output "Startup shortcut installed: $shortcutPath"
+Write-Output 'Codex-bound quota supervisor started.'
