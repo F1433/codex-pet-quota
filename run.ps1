@@ -22,5 +22,11 @@ if ($Once -or $DiagnoseWindows) {
 
 $pythonw = Join-Path (Split-Path -Parent $python.Source) 'pythonw.exe'
 if (-not (Test-Path -LiteralPath $pythonw)) { throw "pythonw.exe not found: $pythonw" }
+$taskName = 'CodexPetQuotaSupervisor'
+if (Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue) {
+    Start-ScheduledTask -TaskName $taskName
+    Write-Output 'Codex-bound pet quota scheduled task started.'
+    exit 0
+}
 Start-Process -FilePath $pythonw -ArgumentList @('-m', 'codex_pet_quota', '--supervisor') -WorkingDirectory $projectRoot -WindowStyle Hidden
 Write-Output 'Codex-bound pet quota supervisor started.'

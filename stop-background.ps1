@@ -1,4 +1,8 @@
 $ErrorActionPreference = 'Stop'
+$taskName = 'CodexPetQuotaSupervisor'
+if (Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue) {
+    Stop-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
+}
 $watchers = @(
     Get-CimInstance Win32_Process -Filter "Name='pythonw.exe'" |
         Where-Object { $_.CommandLine -like '*codex_pet_quota*' }

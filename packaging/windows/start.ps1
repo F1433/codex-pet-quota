@@ -1,6 +1,13 @@
 $ErrorActionPreference = 'Stop'
 $installRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $exePath = (Resolve-Path -LiteralPath (Join-Path $installRoot 'CodexPetQuota.exe')).Path
+$taskName = 'CodexPetQuotaSupervisor'
+$task = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
+if ($task) {
+    Start-ScheduledTask -TaskName $taskName
+    Write-Output 'Codex Pet Quota scheduled task started.'
+    exit 0
+}
 $running = @(
     Get-CimInstance Win32_Process -Filter "Name='CodexPetQuota.exe'" |
         Where-Object { [string]::Equals($_.ExecutablePath, $exePath, [System.StringComparison]::OrdinalIgnoreCase) }

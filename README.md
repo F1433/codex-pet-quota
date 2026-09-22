@@ -12,7 +12,7 @@
 - 拖动期间按鼠标位移约 60 FPS 跟随，不等待最终坐标落盘。
 - 只显示 `limitId=codex` 的每周额度，不混入五小时或模型专用额度。
 - 30 秒内重复交互复用缓存；没有宠物交互时不查询额度。
-- `pythonw.exe` 无控制台运行、单实例保护、Windows 登录自启动与异常自动恢复。
+- 无控制台运行、单实例保护，并由 Windows 任务计划程序提供登录启动与异常自动恢复。
 - 监督进程绑定 Codex 桌面生命周期：Codex 启动时拉起监听，退出时停止，重新启动后自动恢复。
 - 高 DPI 圆角白色胶囊条，不抢焦点、不挡住宠物操作。
 
@@ -68,7 +68,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\install-autostart.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\run.ps1
 ```
 
-安装登录启动项后会立即启动一个轻量监督进程；以后每次登录 Windows 也会静默启动。监督进程检测到 Codex 桌面端后才拉起宠物监听，Codex 退出时停止监听，重新启动 Codex 后自动恢复，不需要手动运行。
+安装任务计划程序后会立即启动一个独立于 Codex 进程树的轻量监督进程；以后每次登录 Windows 也会静默启动。监督进程检测到 Codex 桌面端后才拉起宠物监听，Codex 退出时停止监听，重新启动 Codex 后自动恢复，不需要手动运行。
 
 ## 日常使用
 
