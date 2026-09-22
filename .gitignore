@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.test-state/
+tmp/
+_backups/
+*.zip
+*.log
+.coverage
+.pytest_cache/
+.idea/
+.vscode/
+config.example.json
